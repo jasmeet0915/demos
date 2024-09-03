@@ -23,10 +23,10 @@ def generate_launch_description():
     mars_rover_demos_path = get_package_share_directory('mars_rover')
     mars_rover_models_path = get_package_share_directory('simulation')
 
-    env = {'IGN_GAZEBO_SYSTEM_PLUGIN_PATH':
-           ':'.join([environ.get('IGN_GAZEBO_SYSTEM_PLUGIN_PATH', default=''),
+    env = {'GZ_SIM_SYSTEM_PLUGIN_PATH':
+           ':'.join([environ.get('GZ_SIM_SYSTEM_PLUGIN_PATH', default=''),
                      environ.get('LD_LIBRARY_PATH', default='')]),
-           'IGN_GAZEBO_RESOURCE_PATH':
+           'GZ_SIM_RESOURCE_PATH':
            ':'.join([mars_rover_demos_path])}
 
     urdf_model_path = os.path.join(mars_rover_models_path, 'models', 'curiosity_path',
@@ -62,7 +62,7 @@ def generate_launch_description():
     )
 
     start_world = ExecuteProcess(
-        cmd=['ign gazebo', mars_world_model, '-r'],
+        cmd=['gz sim', mars_world_model, '-r'],
         output='screen',
         additional_env=env,
         shell=True
@@ -76,7 +76,7 @@ def generate_launch_description():
             parameters=[robot_description])
 
     spawn = Node(
-        package='ros_ign_gazebo', executable='create',
+        package='ros_gz_sim', executable='create',
         arguments=[
             '-name', 'curiosity_path',
             '-topic', robot_description,
@@ -87,7 +87,7 @@ def generate_launch_description():
 
     ## Control Components
 
-    component_state_msg = '{name: "IgnitionSystem", target_state: {id: 3, label: ""}}'
+    component_state_msg = '{name: "GazeboSimSystem", target_state: {id: 3, label: ""}}'
 
     ## a hack to resolve current bug
     set_hardware_interface_active = ExecuteProcess(
@@ -132,9 +132,6 @@ def generate_launch_description():
              'wheel_tree_position_controller'],
         output='screen'
     )
-
-
-
 
     return LaunchDescription([
         start_world,
