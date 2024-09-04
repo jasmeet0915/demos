@@ -27,11 +27,11 @@ def generate_launch_description():
            ':'.join([environ.get('GZ_SIM_SYSTEM_PLUGIN_PATH', default=''),
                      environ.get('LD_LIBRARY_PATH', default='')]),
            'GZ_SIM_RESOURCE_PATH':
-           ':'.join([mars_rover_demos_path])}
+           ':'.join([mars_rover_demos_path, mars_rover_models_path + '/models'])}
 
     urdf_model_path = os.path.join(mars_rover_models_path, 'models', 'curiosity_path',
         'urdf', 'curiosity_mars_rover.xacro.urdf')
-    mars_world_model = os.path.join(mars_rover_demos_path, 'worlds', 'mars_curiosity.world')
+    mars_world_model = os.path.join(mars_rover_demos_path, 'worlds', 'mars_gale_crater_patch1.sdf')
 
     doc = xacro.process_file(urdf_model_path)
     robot_description = {'robot_description': doc.toxml()}
